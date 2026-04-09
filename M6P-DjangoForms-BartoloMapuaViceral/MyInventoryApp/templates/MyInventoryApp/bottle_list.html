@@ -1,0 +1,37 @@
+{% extends "MyInventoryApp/base.html" %}
+
+{% block content %}
+
+<h2>Water Bottle Inventory</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>SKU</th>
+            <th>Brand</th>
+            <th>Mouth</th>
+            <th>Size</th>
+            <th>Color</th>
+            <th>Supplier</th>
+            <th>Cost</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for bottle in bottles %}
+        <tr>
+            <td>{{ bottle.sku }}</td>
+            <td>{{ bottle.brand }}</td>
+            <td>{{ bottle.mouth }}</td>
+            <td>{{ bottle.size }}</td>
+            <td>{{ bottle.color }}</td>
+            <td>{{ bottle.supplier }}</td>
+            <td>{{ bottle.cost }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}
