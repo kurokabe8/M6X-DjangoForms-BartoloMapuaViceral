@@ -1,17 +1,30 @@
-from django.shortcuts import render
+def login_view(request):
+    message = ""
 
-# Create your views here.
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-from django.shortcuts import render
-from .models import Supplier, WaterBottle
+        try:
+            Account.objects.get(username=username, password=password)
+            return redirect('view_supplier')
+        except:
+            message = "Invalid login"
 
-def view_supplier(request):
-    suppliers = Supplier.objects.all()
-    return render(request, "MyInventoryApp/supplier_list.html", {"suppliers": suppliers})
-A
-def view_bottles(request):
-    bottles = WaterBottle.objects.all()
-    return render(request, "MyInventoryApp/bottle_list.html", {"bottles": bottles})
+    return render(request, "MyInventoryApp/login.html", {"message": message})
 
-def add_bottle(request):
-    return render(request, "MyInventoryApp/bottle_add.html")
+
+def signup_view(request):
+    message = ""
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        if Account.objects.filter(username=username).exists():
+            message = "Account already exists"
+        else:
+            Account.objects.create(username=username, password=password)
+            return redirect('login')
+
+    return render(request, "MyInventoryApp/signup.html", {"message": message})

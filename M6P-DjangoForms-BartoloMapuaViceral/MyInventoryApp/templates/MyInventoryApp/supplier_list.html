@@ -4,7 +4,13 @@
 
 <h2>Supplier List</h2>
 
-<table>
+<a href="{% url 'add_bottle' %}">Add Water Bottles</a>
+<a href="{% url 'manage_account' pk=account.id %}">Manage Account</a>
+<a href="{% url 'login' %}">Logout</a>
+
+<br><br>
+
+<table border="1">
     <thead>
         <tr>
             <th>Name</th>
@@ -18,8 +24,12 @@
 
     {% for supplier in suppliers %}
         <tr>
-            <td>{{ supplier.name }}</td>
-            <td>{{ supplier.cit y }}</td>
+            <td>
+                <a href="{% url 'view_bottles' %}">
+                    {{ supplier.name }}
+                </a>
+            </td>
+            <td>{{ supplier.city }}</td>
             <td>{{ supplier.country }}</td>
             <td>{{ supplier.created_at }}</td>
         </tr>

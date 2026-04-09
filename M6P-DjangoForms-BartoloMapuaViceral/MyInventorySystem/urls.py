@@ -22,8 +22,20 @@ from MyInventoryApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # LOGIN / SIGNUP
+    path('', views.login_view),
+    path('signup/', views.signup_view, name='signup'),
+    
+    # SUPPLIER
     path('view_supplier/', views.view_supplier),
+
+    # WATER BOTTLES
     path('view_bottles/', views.view_bottles),
+    path('view_bottle_details/<int:pk>/', views.view_bottle_details),
     path('add_bottle/', views.add_bottle),
+
+    # ACCOUNT
+    path('manage_account/<int:pk>/', views.manage_account),
+    path('change_password/<int:pk>/', views.change_password),
 ]
     

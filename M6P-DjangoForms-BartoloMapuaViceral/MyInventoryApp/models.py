@@ -16,6 +16,16 @@ citations in the comments of our program.
 
 from django.db import models
 
+class Account(models.Model):
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=50)
+
+    def getUsername(self):
+        return self.username
+
+    def getPassword(self):
+        return self.passwor
+
 class Supplier(models.Model): 
     name = models.CharField(max_length=150)
     city = models.CharField(max_length=60)
