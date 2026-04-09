@@ -5,7 +5,11 @@
 <h2>Supplier List</h2>
 
 <a href="{% url 'add_bottle' %}">Add Water Bottles</a>
-<a href="{% url 'manage_account' pk=account.id %}">Manage Account</a>
+
+{% if account %}
+    <a href="{% url 'manage_account' pk=account.id %}">Manage Account</a>
+{% endif %}
+
 <a href="{% url 'login' %}">Logout</a>
 
 <br><br>
@@ -21,7 +25,6 @@
     </thead>
 
     <tbody>
-
     {% for supplier in suppliers %}
         <tr>
             <td>
@@ -34,7 +37,6 @@
             <td>{{ supplier.created_at }}</td>
         </tr>
     {% endfor %}
-
     </tbody>
 </table>
 

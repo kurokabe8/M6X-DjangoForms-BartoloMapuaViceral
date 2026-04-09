@@ -9,11 +9,12 @@
         <tr>
             <th>SKU</th>
             <th>Brand</th>
-            <th>Mouth</th>
+            <th>Mouth Size</th>
             <th>Size</th>
             <th>Color</th>
             <th>Supplier</th>
             <th>Cost</th>
+            <th>Quantity</th>
         </tr>
     </thead>
 
@@ -21,13 +22,18 @@
 
     {% for bottle in bottles %}
         <tr>
-            <td>{{ bottle.sku }}</td>
+            <td>
+                <a href="{% url 'view_bottle_details' bottle.pk %}">
+                    {{ bottle.sku }}
+                </a>
+            </td>
             <td>{{ bottle.brand }}</td>
-            <td>{{ bottle.mouth }}</td>
+            <td>{{ bottle.mouth_size }}</td>
             <td>{{ bottle.size }}</td>
             <td>{{ bottle.color }}</td>
-            <td>{{ bottle.supplier }}</td>
+            <td>{{ bottle.supplied_by.name }}</td>
             <td>{{ bottle.cost }}</td>
+            <td>{{ bottle.current_quantity }}</td>
         </tr>
     {% endfor %}
 

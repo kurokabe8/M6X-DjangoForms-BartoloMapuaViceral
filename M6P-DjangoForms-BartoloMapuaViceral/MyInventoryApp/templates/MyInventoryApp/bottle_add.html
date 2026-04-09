@@ -1,0 +1,45 @@
+{% extends "MyInventoryApp/base.html" %}
+
+{% block content %}
+
+<h2>Add Water Bottle</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>SKU:</label><br>
+    <input type="text" name="sku"><br><br>
+
+    <label>Brand:</label><br>
+    <input type="text" name="brand"><br><br>
+
+    <label>Cost:</label><br>
+    <input type="number" name="cost" step="0.01"><br><br>
+
+    <label>Size:</label><br>
+    <input type="text" name="size"><br><br>
+
+    <label>Mouth Size:</label><br>
+    <input type="text" name="mouth_size"><br><br>
+
+    <label>Color:</label><br>
+    <input type="text" name="color"><br><br>
+
+    <label>Supplier:</label><br>
+    <select name="supplied_by">
+        {% for supplier in suppliers %}
+            <option value="{{ supplier.id }}">
+                {{ supplier.name }}
+            </option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Quantity:</label><br>
+    <input type="number" name="current_quantity"><br><br>
+
+    <button type="submit">Add Bottle</button>
+    <button type="submit" name="cancel">Cancel</button>
+
+</form>
+
+{% endblock %}

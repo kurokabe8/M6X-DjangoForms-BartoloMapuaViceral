@@ -22,20 +22,15 @@ from MyInventoryApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # LOGIN / SIGNUP
-    path('', views.login_view),
+    path('', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
-    
-    # SUPPLIER
-    path('view_supplier/', views.view_supplier),
 
-    # WATER BOTTLES
-    path('view_bottles/', views.view_bottles),
-    path('view_bottle_details/<int:pk>/', views.view_bottle_details),
-    path('add_bottle/', views.add_bottle),
+    path('view_supplier/', views.view_supplier, name='view_supplier'),
 
-    # ACCOUNT
-    path('manage_account/<int:pk>/', views.manage_account),
-    path('change_password/<int:pk>/', views.change_password),
+    path('view_bottles/', views.view_bottles, name='view_bottles'),
+    path('view_bottle_details/<int:pk>/', views.view_bottle_details, name='view_bottle_details'),
+    path('add_bottle/', views.add_bottle, name='add_bottle'),
+
+    path('manage_account/<int:pk>/', views.manage_account, name='manage_account'),
+    path('change_password/<int:pk>/', views.change_password, name='change_password'),
 ]
-    
