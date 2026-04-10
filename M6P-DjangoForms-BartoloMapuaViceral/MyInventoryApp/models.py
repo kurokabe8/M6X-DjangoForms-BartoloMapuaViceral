@@ -24,7 +24,7 @@ class Account(models.Model):
         return self.username
 
     def getPassword(self):
-        return self.passwor
+        return self.password
 
 class Supplier(models.Model): 
     name = models.CharField(max_length=150)

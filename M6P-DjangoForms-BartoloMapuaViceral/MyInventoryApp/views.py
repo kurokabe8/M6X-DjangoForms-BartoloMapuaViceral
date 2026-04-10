@@ -1,7 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Account, Supplier, WaterBottle
 
-current_account_id = None
+
+def get_current_account(request):
+    account_id = request.session.get('account_id')
+    if account_id:
+        try:
+            return Account.objects.get(pk=account_id)
+        except Account.DoesNotExist:
+            pass
+    return None
+
 
 def login_view(request):
     message = ""
@@ -10,11 +19,12 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        try:
-            Account.objects.get(username=username, password=password)
+        account = Account.objects.filter(username=username, password=password).first()
+        if account:
+            request.session['account_id'] = account.pk
             return redirect('view_supplier')
-        except:
-            message = "Invalid login"
+
+        message = "Invalid login"
 
     return render(request, "MyInventoryApp/login.html", {"message": message})
 
@@ -37,7 +47,8 @@ def signup_view(request):
 
 def view_supplier(request):
     suppliers = Supplier.objects.all()
-    return render(request, "MyInventoryApp/supplier_list.html", {"suppliers": suppliers})
+    account = get_current_account(request)
+    return render(request, "MyInventoryApp/supplier_list.html", {"suppliers": suppliers, "account": account})
 
 
 def view_bottles(request):
@@ -86,6 +97,17 @@ def add_bottle(request):
         return redirect('view_supplier')
 
     return render(request, "MyInventoryApp/bottle_add.html", {"suppliers": suppliers})
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('login')
+
+
+def delete_account(request, pk):
+    Account.objects.filter(pk=pk).delete()
+    request.session.flush()
+    return redirect('login')
+
 
 def manage_account(request, pk):
     account = get_object_or_404(Account, pk=pk)
