@@ -57,6 +57,10 @@ def delete_account(request, pk):
     Account.objects.filter(pk=pk).delete()
     return redirect('login')
 
+def better_menu(request):
+    dish_objects = Dish.objects.all()
+    return render(request, 'tapasapp/better_list.html', {'dishes':dish_objects})
+
 def add_menu(request, pk):
     user = get_object_or_404(Account, pk=pk)
     if request.method == "POST":
