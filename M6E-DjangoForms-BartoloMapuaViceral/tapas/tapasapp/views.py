@@ -143,6 +143,7 @@ def update_dish(request, user_pk, pk):
         preptime_raw = request.POST.get('ptime', '')
         error = None
 
+        # this is to invalidate non-integer inputs !!!!
         try:
             cooktime = int(cooktime_raw)
             preptime = int(preptime_raw)
