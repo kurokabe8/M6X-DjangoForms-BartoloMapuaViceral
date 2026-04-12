@@ -18,8 +18,7 @@
                     <h2 class="text-center">Login</h2>
                     {% if error %}
                         <div class="alert alert-warning">{{ error }}</div>
-                    {% endif %}
-                    {% if message %}
+                    {% elif message %}
                         <div class="alert alert-success">{{ message }}</div>
                     {% endif %}
                     <form method="post">

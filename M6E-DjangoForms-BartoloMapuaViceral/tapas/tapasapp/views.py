@@ -10,7 +10,12 @@ def login_view(request):
             return redirect('basic_list', pk=user.pk)
         else:
             return render(request, 'tapasapp/login.html', {'error': 'Invalid login'})
-    return render(request, 'tapasapp/login.html')
+
+    message = None
+    if request.GET.get('created') == '1':
+        message = 'Account created successfully'
+
+    return render(request, 'tapasapp/login.html', {'message': message})
 
 def signup_view(request):
     if request.method == "POST":
@@ -20,7 +25,7 @@ def signup_view(request):
             return render(request, 'tapasapp/signup.html', {'error': 'Account already exists'})
         else:
             Account.objects.create(username=u, password=p)
-            return render(request, 'tapasapp/login.html', {'message': 'Account created successfully'})
+            return redirect('/?created=1')
     return render(request, 'tapasapp/signup.html')
 
 def basic_list(request, pk):
