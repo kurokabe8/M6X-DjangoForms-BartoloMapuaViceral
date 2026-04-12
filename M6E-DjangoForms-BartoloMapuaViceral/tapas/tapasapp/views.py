@@ -60,9 +60,31 @@ def delete_account(request, pk):
 def add_menu(request, pk):
     user = get_object_or_404(Account, pk=pk)
     if request.method == "POST":
-        dishname = request.POST.get('dname')
-        cooktime = request.POST.get('ctime')
-        preptime = request.POST.get('ptime')
+        dishname = request.POST.get('dname', '').strip()
+        cooktime_raw = request.POST.get('ctime', '')
+        preptime_raw = request.POST.get('ptime', '')
+        error = None
+
+        try:
+            cooktime = int(cooktime_raw)
+            preptime = int(preptime_raw)
+        except (ValueError, TypeError):
+            error = 'Cook time and prep time must be whole numbers.'
+        else:
+            if cooktime < 0 or preptime < 0:
+                error = 'Cook time and prep time cannot be negative.'
+            elif not dishname:
+                error = 'Dish name is required.'
+
+        if error:
+            return render(request, 'tapasapp/add_menu.html', {
+                'user': user,
+                'error': error,
+                'dishname': dishname,
+                'cooktime': cooktime_raw,
+                'preptime': preptime_raw,
+            })
+
         Dish.objects.create(name=dishname, cook_time=cooktime, prep_time=preptime)
         return redirect('basic_list', pk=user.pk)
     else:
@@ -80,11 +102,31 @@ def delete_dish(request, user_pk, pk):
 
 def update_dish(request, user_pk, pk):
     user = get_object_or_404(Account, pk=user_pk)
+    d = get_object_or_404(Dish, pk=pk)
     if request.method == "POST":
-        cooktime = request.POST.get('ctime')
-        preptime = request.POST.get('ptime')
+        cooktime_raw = request.POST.get('ctime', '')
+        preptime_raw = request.POST.get('ptime', '')
+        error = None
+
+        try:
+            cooktime = int(cooktime_raw)
+            preptime = int(preptime_raw)
+        except (ValueError, TypeError):
+            error = 'Cook time and prep time must be whole numbers.'
+        else:
+            if cooktime < 0 or preptime < 0:
+                error = 'Cook time and prep time cannot be negative.'
+
+        if error:
+            return render(request, 'tapasapp/update_menu.html', {
+                'user': user,
+                'd': d,
+                'error': error,
+                'cooktime': cooktime_raw,
+                'preptime': preptime_raw,
+            })
+
         Dish.objects.filter(pk=pk).update(cook_time=cooktime, prep_time=preptime)
         return redirect('view_detail', user_pk=user.pk, pk=pk)
     else:
-        d = get_object_or_404(Dish, pk=pk)
         return render(request, 'tapasapp/update_menu.html', {'user': user, 'd': d})

@@ -11,7 +11,10 @@
         <div class="card-body">
 
             <form method="POST" action="{% url 'update_dish' user_pk=user.pk pk=d.pk %}">{% csrf_token %}
-            
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="name"> Name: </label>
                     <input type="text" class="form-control" id="dname" name="dname" value="{{d.name}}" disabled>
@@ -21,14 +24,14 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="vintage"> Cook Time: </label>
-                            <input type="number" class="form-control w-50" id="ctime" name="ctime" value="{{d.cook_time}}">
+                            <input type="number" min="0" step="1" class="form-control w-50" id="ctime" name="ctime" value="{{ cooktime|default:d.cook_time }}">
                         </div>
         
                     </div>
                     <div class="col-6">
                         <div class="form-group">
                             <label for="price"> Prep Time: </label>
-                            <input type="number" class="form-control w-50" id="ptime" name="ptime" value="{{d.prep_time}}">
+                            <input type="number" min="0" step="1" class="form-control w-50" id="ptime" name="ptime" value="{{ preptime|default:d.prep_time }}">
                         </div>
         
                     </div>
