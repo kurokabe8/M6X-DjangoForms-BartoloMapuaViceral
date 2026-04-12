@@ -14,11 +14,15 @@
     <body>
         <nav class="navbar navbar-dark bg-custom mb-3 sticky-top" style="background-color: #590404;">
             <div class="container-fluid">
-                <a class="navbar-brand mb-0" href="{% url 'better_menu' %}">My Tapas Menu</span> </a>
-                <a href="{% url 'add_menu' %}" style="color:white"><i class="material-icons">add</i></a>
-    
+                <a class="navbar-brand mb-0" href="{% if user %}{% url 'basic_list' pk=user.pk %}{% else %}#{% endif %}">My Tapas Menu</a>
+                <div class="d-flex align-items-center">
+                    {% if user %}
+                        <a href="{% url 'manage_account' pk=user.pk %}" class="btn btn-outline-light me-2">Manage Account</a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Logout</a>
+                        <a href="{% url 'add_menu' pk=user.pk %}" style="color:white"><i class="material-icons">add</i></a>
+                    {% endif %}
+                </div>
             </div>
-
         </nav>
 
         <div class="container ">

@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
 
-            <form method="POST" action="{% url 'update_dish' pk=d.pk %}">{% csrf_token %}
+            <form method="POST" action="{% url 'update_dish' user_pk=user.pk pk=d.pk %}">{% csrf_token %}
             
                 <div class="form-group">
                     <label for="name"> Name: </label>

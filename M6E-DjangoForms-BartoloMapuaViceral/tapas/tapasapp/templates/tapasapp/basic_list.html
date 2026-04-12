@@ -1,67 +1,25 @@
+{% extends 'tapasapp/base.html' %}
 {% load static %}
 
-<html>
-    <head>
-        <title>Basic List</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
-        <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static '/bootstrap/css/custom.css' %}">
-
-        <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-        
-    </head>
-    <body>
-        <nav class="navbar navbar-dark bg-custom mb-3 sticky-top" style="background-color: #590404;">
-            <div class="container-fluid">
-                <a class="navbar-brand mb-0" href="#">My Tapas Menu</a>
-                <div>
-                    <a href="{% url 'manage_account' pk=user.pk %}" class="btn btn-outline-light me-2">Manage Account</a>
-                    <a href="{% url 'login' %}" class="btn btn-outline-light">Logout</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container ">
-            <div class="row">
-                <div class="col-12">
-                    <table class="table table-striped mb-5">
-                        <thead>
-                            <th scope="col"> Name </th>
-                            <th scope="col"> Cooking Time </th>
-                            <th scope="col"> Prep Time </th>
-                            <th scope="col">  </th>
-                        </thead>
-                        <tbody>
-                            {% for d in dishes %}
-                            <tr>
-                                <td> {{ d.name }} </td>
-                                <td> {{ d.prep_time }} </td>
-                                <td> {{ d.cook_time }} </td>
-                                <td><a href="{% url 'view_detail' pk=d.pk %}"  class="btn btn-dark">Details</button></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>  
-        
-
-   
-    </body>
-    <nav class="navbar bg-custom fixed-bottom justify-content-center" style="background: #590404;">
-        <div style="color: white;">&copy; 2020</div>
-   </nav>
-
-
-    <!--
-    <footer class="footer bg-custom fixed-bottom" style="background-color: #590404;">
-
-        <div class="container">&copy; 2020</div>
-      
-    </footer>
-     -->
-
-
-    <!--<div class="row fixed-botom bg-custom" style="background-color: #590404;"> -->
+{% block content %}
+<div class="col-12">
+    <table class="table table-striped mb-5">
+        <thead>
+            <th scope="col"> Name </th>
+            <th scope="col"> Cooking Time </th>
+            <th scope="col"> Prep Time </th>
+            <th scope="col">  </th>
+        </thead>
+        <tbody>
+            {% for d in dishes %}
+            <tr>
+                <td> {{ d.name }} </td>
+                <td> {{ d.prep_time }} </td>
+                <td> {{ d.cook_time }} </td>
+                <td><a href="{% url 'view_detail' user_pk=user.pk pk=d.pk %}"  class="btn btn-dark">Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
