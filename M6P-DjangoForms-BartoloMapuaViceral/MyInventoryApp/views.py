@@ -1,6 +1,7 @@
 from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from .models import Account, Supplier, WaterBottle
 
 
@@ -16,6 +17,11 @@ def get_current_account(request):
 
 def login_view(request):
     message = ""
+    message_type = "danger"
+
+    if request.GET.get("created") == "true":
+        message = "Account created successfully"
+        message_type = "success"
 
     if request.method == "POST":
         username = request.POST.get("username")
@@ -27,8 +33,12 @@ def login_view(request):
             return redirect('view_supplier')
 
         message = "Invalid login"
+        message_type = "danger"
 
-    return render(request, "MyInventoryApp/login.html", {"message": message})
+    return render(request, "MyInventoryApp/login.html", {
+        "message": message,
+        "message_type": message_type,
+    })
 
 
 def signup_view(request):
@@ -42,7 +52,7 @@ def signup_view(request):
             message = "Account already exists"
         else:
             Account.objects.create(username=username, password=password)
-            return redirect('login')
+            return redirect(f"{reverse('login')}?created=true")
 
     return render(request, "MyInventoryApp/signup.html", {"message": message})
 
