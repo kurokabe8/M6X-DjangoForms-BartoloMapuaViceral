@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Account, Supplier, WaterBottle
 
@@ -67,36 +69,96 @@ def view_bottle_details(request, pk):
 
 def add_bottle(request):
     suppliers = Supplier.objects.all()
+    errors = []
+    form_data = {
+        "sku": "",
+        "brand": "",
+        "cost": "",
+        "size": "",
+        "mouth_size": "",
+        "color": "",
+        "supplied_by": "",
+        "current_quantity": "",
+    }
 
     if request.method == "POST":
         if "cancel" in request.POST:
             return redirect('view_supplier')
 
-        sku = request.POST.get("sku")
-        brand = request.POST.get("brand")
-        cost = request.POST.get("cost")
-        size = request.POST.get("size")
-        mouth_size = request.POST.get("mouth_size")
-        color = request.POST.get("color")
-        supplied_by_id = request.POST.get("supplied_by")
-        current_quantity = request.POST.get("current_quantity")
+        form_data = {
+            "sku": request.POST.get("sku", "").strip(),
+            "brand": request.POST.get("brand", "").strip(),
+            "cost": request.POST.get("cost", "").strip(),
+            "size": request.POST.get("size", "").strip(),
+            "mouth_size": request.POST.get("mouth_size", "").strip(),
+            "color": request.POST.get("color", "").strip(),
+            "supplied_by": request.POST.get("supplied_by", ""),
+            "current_quantity": request.POST.get("current_quantity", "").strip(),
+        }
 
-        supplier = get_object_or_404(Supplier, pk=supplied_by_id)
+        sku = form_data["sku"]
+        brand = form_data["brand"]
+        cost_value = form_data["cost"]
+        size = form_data["size"]
+        mouth_size = form_data["mouth_size"]
+        color = form_data["color"]
+        supplied_by_id = form_data["supplied_by"]
+        current_quantity_value = form_data["current_quantity"]
 
-        WaterBottle.objects.create(
-            sku=sku,
-            brand=brand,
-            cost=cost,
-            size=size,
-            mouth_size=mouth_size,
-            color=color,
-            supplied_by=supplier,
-            current_quantity=current_quantity
-        )
+        if not sku:
+            errors.append("SKU is required.")
+        elif WaterBottle.objects.filter(sku=sku).exists():
+            errors.append("A bottle with that SKU already exists.")
 
-        return redirect('view_supplier')
+        if not brand:
+            errors.append("Brand is required.")
 
-    return render(request, "MyInventoryApp/bottle_add.html", {"suppliers": suppliers})
+        if not cost_value:
+            errors.append("Cost is required.")
+        else:
+            try:
+                cost = Decimal(cost_value)
+                if cost < 0:
+                    errors.append("Cost cannot be negative.")
+            except InvalidOperation:
+                errors.append("Cost must be a valid number.")
+
+        if not current_quantity_value:
+            errors.append("Quantity is required.")
+        else:
+            try:
+                current_quantity = int(current_quantity_value)
+                if current_quantity < 0:
+                    errors.append("Quantity cannot be negative.")
+            except ValueError:
+                errors.append("Quantity must be an integer.")
+
+        supplier = None
+        if supplied_by_id:
+            supplier = Supplier.objects.filter(pk=supplied_by_id).first()
+            if not supplier:
+                errors.append("Supplier selection is invalid.")
+        else:
+            errors.append("Supplier selection is required.")
+
+        if not errors:
+            WaterBottle.objects.create(
+                sku=sku,
+                brand=brand,
+                cost=cost,
+                size=size,
+                mouth_size=mouth_size,
+                color=color,
+                supplied_by=supplier,
+                current_quantity=current_quantity
+            )
+            return redirect('view_supplier')
+
+    return render(request, "MyInventoryApp/bottle_add.html", {
+        "suppliers": suppliers,
+        "errors": errors,
+        **form_data,
+    })
 
 def logout_view(request):
     request.session.flush()
